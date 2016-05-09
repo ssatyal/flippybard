@@ -38,6 +38,9 @@ var mainState = {
     this.score = 0;
     this.labelScore = game.add.text(20, 20, "0",
       {font: "30px Arial", fill: "#FFFFFF"});
+
+    //move the anchor of pivot to the left and down
+    this.bird.anchor.setTo(-0.2, 0.5);
   },
 
   update: function() {
@@ -47,12 +50,23 @@ var mainState = {
       {this.restartGame()};
     game.physics.arcade.overlap(
       this.bird, this.pipes, this.restartGame, null, this);
+    if (this.bird.angle < 20){
+      this.bird.angle += 1};
   },
 
   //make the bird jump
   jump: function(){
     //add vertical velocity to bird
     this.bird.body.velocity.y = -350;
+
+    //create animation on bird
+    var animation = game.add.tween(this.bird);
+
+    //change angle of bird to -20 degrees in 100 millisec.
+    animation.to({angle: -20}, 100);
+
+    //start the animation
+    animation.start();
   },
 
   //restart the game
