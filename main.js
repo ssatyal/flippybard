@@ -3,6 +3,7 @@ var mainState = {
   preload: function(){
     // load the bird sprite
     game.load.image('bird', 'assets/bird.png');
+    game.load.image('pipe', 'assets/pipe.png');
   },
 
   create: function(){
@@ -26,6 +27,11 @@ var mainState = {
     var spaceKey = game.input.keyboard.addKey(
       Phaser.Keyboard.SPACEBAR);
     spaceKey.onDown.add(this.jump, this);
+
+    //create and empty group
+    this.pipes = game.add.group();
+
+    this.timer = game.time.events.loop(1500, this.addRowOfPipes, this);
   },
 
   update: function() {
@@ -45,6 +51,37 @@ var mainState = {
   restartGame: function(){
     //start the 'main' state, which restarts the game
     game.state.start('main');
+  },
+
+  addOnePipe: function(x, y){
+    //create a pipe at the position of x and y
+    var pipe = game.add.sprite(x, y, 'pipe');
+
+    //add the pipe to our previously created group
+    this.pipes.add(pipe);
+
+    //enable physics on pipe
+    game.physics.arcade.enable(pipe);
+
+    //add velocity to pipe to move left
+    pipe.body.velocity.x = -200;
+
+    //auto kill the pipe when its no longer visible
+    pipe.checkWorldBounds = true;
+    pipe.outOfBoundsKill = true;
+  },
+
+  addRowOfPipes: function() {
+    //randomly pick a number between 1 and 5
+    //this will be the hole position
+    var hole = Math.floor(Math.random() * 5) + 1;
+
+    //add the 6 pipes
+    //with one big hole at position 'hole' and 'hole + 1'
+    for (var i = 0; i < 8; i++){
+      if (i != hole && i != hole + 1)
+      this.addOnePipe(400, i * 60 + 10);
+    }
   }
 
 };
