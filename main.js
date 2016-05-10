@@ -8,6 +8,22 @@ var mainState = {
   },
 
   create: function(){
+    //if this is not a desktop (it's mobile)
+    if (game.device.desktop == false) {
+      //set the scaling mode to SHOW_ALL to show all the game
+      game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+
+      //set min and max size for game
+      //here the min is half the game size
+      //here the max is the original game size
+      game.scale.setMinMax(game.width/2, game.height/2,
+      game.width, game.height);
+
+      //center the game horizontally and vertically
+      game.scale.pageAlignHorizontally = true;
+      game.scale.pageAlignVertically = true;
+    }
+
     // change the background color of the game to blue
     game.stage.backgroundColor = "#71C5CF";
 
@@ -43,6 +59,9 @@ var mainState = {
     //move the anchor of pivot to the left and down
     this.bird.anchor.setTo(-0.2, 0.5);
     this.jumpSound = game.add.audio('jump');
+
+    //call 'jump' function when tap/click on screen
+    game.input.onDown.add(this.jump, this);
   },
 
   update: function() {
